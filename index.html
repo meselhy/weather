@@ -1,0 +1,239 @@
+ <!DOCTYPE html>
+ <html lang="en">
+
+ <head>
+ 	<meta charset="utf-8">
+ 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+ 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable = no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="iWeather">
+ 	<title>iWeather</title>
+ 	<link rel="canonical" href="https://weather.meselhy.dev" />
+
+
+ 	<!-- Icons and Colors -->
+ 	<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+ 	<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
+ 	<link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
+ 	<link rel="manifest" href="./manifest.json">
+ 	<link rel="mask-icon" href="./safari-pinned-tab.svg" color="#000000">
+ 	<link rel="shortcut icon" href="./favicon.ico">
+ 	<meta name="msapplication-TileColor" content="#000000">
+ 	<meta name="msapplication-TileImage" content="./mstile-144x144.png">
+ 	<meta name="msapplication-config" content="./browserconfig.xml">
+ 	<meta name="theme-color" content="#000000">
+
+ 	<!-- SEO and Social Sharing and SEO -->
+ 	<meta name="description" content="iWeather App" />
+ 	<meta name="robots" content="noodp" />
+ 	<meta name="author" content="Abdalla Meselhy">
+ 	<meta name="keywords"
+ 		content="progressive web app, progressive web application, pwa, pwa progressive web app, pwa progressive web application, progressive app, basic progressive web app, basic progressive web application, basic pwa, example progressive web app, example progressive web application, example pwa, progressive web app basic, progressive web app builder, progressive web app example, progressive web app sample, progressive web app template, sample progressive web app, sample progressive web application, sample pwa, free progressive web application template, progressive web application template, progressive web app template free, progressive web app template free download, progressive web app html template, progressive web app template github" />
+
+
+ 	<!-- Styles -->
+ 	<link rel="stylesheet" href="style.css">
+ 	<script src="https://kit.fontawesome.com/d7def86423.js" crossorigin="anonymous"></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+
+ 	<!-- Javscript -->
+ 	<script>
+ 		if ("serviceWorker" in navigator) {
+ 			window.addEventListener("load", () => {
+ 				navigator.serviceWorker && navigator.serviceWorker.register("./sw.js");
+ 			});
+ 		}
+
+		
+
+		
+		 var currentCallback;
+
+// override default browser alert
+window.alert = function(msg, callback){
+  $('.message').text(msg);
+  $('.customAlert').css('animation', 'fadeIn 0.3s linear');
+  $('.customAlert').css('display', 'inline');
+  setTimeout(function(){
+    $('.customAlert').css('animation', 'none');
+  }, 200);
+  currentCallback = callback;
+}
+$(function(){
+  
+  // add listener for when our confirmation button is clicked
+	$('.confirmButton').click(function(){
+    $('.customAlert').css('animation', 'fadeOut 0.3s linear');
+    setTimeout(function(){
+	 $('.customAlert').css('display', 'none');
+     $('.customAlert').css('animation', 'none');
+    }, 200);
+    currentCallback();
+  })
+  
+  });
+  
+  function myInfo() {
+    alert("This web app was made by MESELHY.", function(){
+      console.log("Callback executed");
+    })
+  };
+
+
+ 	</script>
+ 	<script defer src="./main.js"></script>
+ </head>
+
+ <body>
+ 	<div class="preloader"><img src="loader.gif">
+ 		<div id="error">
+ 		</div>
+ 	</div>
+	 <div class='customAlert'>
+		<p class='message'></p>
+		  <input type='button' class='confirmButton' value='Close'>
+	  </div>
+ 	<header>
+ 		<div class="menu">
+ 			<i class="fa-solid fa-ellipsis-vertical"></i>
+ 			<span class="circle" onclick="myInfo()">
+ 				<i class="fa-solid fa-diamond"></i>
+ 			</span>
+ 		</div>
+ 		<div class="navbar">
+ 			<a href="#home" class="active"><i class="fa-solid fa-house"></i></a>
+ 			<a href="#news"><i class="fa-solid fa-magnifying-glass"></i></a>
+ 			<a href="#contact"><i class="fa-solid fa-location-dot"></i></a>
+ 			<a href="#profile"><i class="fa-solid fa-user"></i></a>
+ 		</div>
+ 	</header>
+
+ 	<section>
+ 		<div class="content">
+ 			<div class="city" id="city">
+
+ 			</div>
+ 			<div class="desc" id="desc">
+
+ 			</div>
+ 			<div class="temp" id="temp">
+
+ 			</div>
+ 			<div class="media">
+ 				<div class="center">
+ 					<img src="" id="icon">
+
+ 				</div>
+ 			</div>
+ 		</div>
+ 		<div class="subcontent">
+ 			<div class="time">
+ 				<img src="" id="morning">
+ 				<div class="p">
+ 					MORNING
+ 				</div>
+ 				<div class="p2" id="morn">
+
+ 				</div>
+ 			</div>
+ 			<div class="time">
+ 				<img src="" id="evening">
+ 				<div class="p">
+ 					EVENING
+ 				</div>
+ 				<div class="p2" id="eve">
+
+ 				</div>
+ 			</div>
+ 			<div class="time">
+ 				<img src="" id="night">
+ 				<div class="p">
+ 					NIGHT
+ 				</div>
+ 				<div class="p2" id="nit">
+
+ 				</div>
+ 			</div>
+ 		</div>
+
+ 	</section>
+
+
+ 	<footer>
+
+ 	</footer>
+
+ 	<script>
+ 		window.onload = function () {
+ 			getLocation();
+ 		};
+
+
+
+ 		var x = document.getElementById("city");
+
+ 		function getLocation() {
+ 			if (navigator.geolocation) {
+ 				navigator.geolocation.getCurrentPosition(showPosition, showError);
+ 			} else {
+ 				document.getElementById('error').innerHTML = "Geolocation is not supported by this browser.";
+ 			}
+ 		}
+
+ 		function showPosition(position) {
+ 			let x = position.coords.latitude; //65.778867 
+ 			let y = position.coords.longitude; //-169.063430
+ 			renderApi(x, y);
+ 		}
+
+ 		function showError(error) {
+ 			switch (error.code) {
+ 				case error.PERMISSION_DENIED:
+ 					document.getElementById('error').innerHTML = "Please accept Geolocation request."
+ 					break;
+ 				case error.POSITION_UNAVAILABLE:
+ 					document.getElementById('error').innerHTML = "Location information is unavailable."
+ 					break;
+ 				case error.TIMEOUT:
+ 					document.getElementById('error').innerHTML = "The request to get location timed out."
+ 					break;
+ 				case error.UNKNOWN_ERROR:
+ 					document.getElementById('error').innerHTML = "An unknown error occurred, please try again later."
+ 					break;
+ 			}
+ 		}
+
+ 		async function getApi(lat, lon) {
+ 			let url =
+ 				`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&cnt=4&appid=1b6befc76d40dca7c5f24ac8f1cacbaa`;
+ 			try {
+ 				let res = await fetch(url);
+ 				return await res.json();
+ 			} catch (error) {
+ 				console.log(error);
+ 			}
+ 		}
+
+ 		async function renderApi(x, y) {
+ 			lat = x;
+ 			lon = y;
+ 			let data = await getApi(lat, lon);
+ 			let ico = "https://openweathermap.org/img/wn/"
+ 			console.log(data);
+ 			document.getElementById("city").innerHTML = data.city.name;
+ 			document.getElementById("desc").innerHTML = data.list[0].weather[0].description;
+ 			document.getElementById("temp").innerHTML = Math.trunc(data.list[0].main.temp) + '°';
+ 			document.getElementById("icon").src = ico + data.list[0].weather[0].icon + '@4x.png';
+ 			document.getElementById("morn").innerHTML = Math.trunc(data.list[1].main.temp) + '°';
+ 			document.getElementById("eve").innerHTML = Math.trunc(data.list[2].main.temp) + '°';
+ 			document.getElementById("nit").innerHTML = Math.trunc(data.list[3].main.temp) + '°';
+ 			document.getElementById("morning").src = ico + data.list[1].weather[0].icon + '@2x.png';
+ 			document.getElementById("evening").src = ico + data.list[2].weather[0].icon + '@2x.png';
+ 			document.getElementById("night").src = ico + data.list[3].weather[0].icon + '@2x.png';
+ 			document.querySelector(".preloader").style.display = "none";
+ 		}
+ 	</script>
+ </body>
+
+ </html>

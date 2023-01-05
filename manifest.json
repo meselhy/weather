@@ -1,0 +1,17 @@
+{
+	"name": "iWeather",
+	"short_name": "iWeather",
+	"display": "fullscreen",
+	"start_url": "./?utm_source=pwa_install",
+	"scope": ".",
+	"theme_color": "#000",
+	"background_color": "#000",
+	"icons":[
+        {
+            "src": "maskable_icon.png",
+            "sizes": "650x650",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+	]
+}
